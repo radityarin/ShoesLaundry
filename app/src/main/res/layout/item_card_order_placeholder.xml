@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    app:cardCornerRadius="10dp"
     android:orientation="horizontal"
+    app:cardCornerRadius="10dp"
     tools:targetApi="o">
 
     <LinearLayout
@@ -17,13 +17,13 @@
         android:orientation="horizontal"
         android:paddingHorizontal="16dp">
 
-        <ImageView
+        <View
             android:id="@+id/logokategori"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="center_vertical"
-            android:contentDescription="Icon"
-            android:src="@drawable/onprogress" />
+            android:background="@color/colorPlaceholder"
+            android:contentDescription="Icon" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,20 +33,20 @@
             android:orientation="vertical"
             tools:targetApi="o">
 
-            <TextView
+            <View
                 android:id="@+id/ordernumber"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Order No : #123123123"
+                android:layout_height="20dp"
+                android:background="@color/colorPlaceholder"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
-            <TextView
+            <View
                 android:id="@+id/orderstatus"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/proses_penjemputan"
+                android:background="@color/colorPlaceholder"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold" />
         </LinearLayout>

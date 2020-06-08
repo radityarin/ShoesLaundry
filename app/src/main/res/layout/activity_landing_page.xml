@@ -3,12 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context=".ui.generalactivity.LandingPage">
 
-    <RelativeLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background" />
+
+    <ImageView
+        android:id="@+id/m"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_above="@id/title"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/washnosquare" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/rl"
+        android:layout_marginBottom="32dp"
+        android:text="Garage Shoes\nClean Laundry"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bottomcardbackground"
         android:padding="32dp"
@@ -25,15 +51,24 @@
                 android:text="Selamat datang di Shoes Laundry!"
                 android:textColor="@color/colorText"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_marginTop="32dp"
+                android:layout_height="wrap_content"
+                android:text="Sekarang kamu dengan mudah bisa laundry sepatu menggunakan aplikasi ini!"
+                android:textColor="@color/colorText"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:orientation="vertical">
+
             <Button
                 android:id="@+id/buttonmasuk"
                 android:layout_width="match_parent"

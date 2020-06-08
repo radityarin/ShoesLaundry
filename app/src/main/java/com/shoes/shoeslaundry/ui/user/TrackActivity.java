@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,13 +22,28 @@ import com.shoes.shoeslaundry.data.model.Order;
 import java.util.ArrayList;
 
 public class TrackActivity extends AppCompatActivity {
+
     private ArrayList<Order> listsewa;
     private FirebaseAuth auth;
+    private Button btn_back;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track);
+
+        btn_back = findViewById(R.id.backbutton);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         auth = FirebaseAuth.getInstance();
+        getOrder();
+    }
+
+    private void getOrder() {
         listsewa = new ArrayList<>();
 
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -45,7 +62,7 @@ public class TrackActivity extends AppCompatActivity {
                         listsewa.add(mSewa);
                     }
                 }
-                recyclerView.setAdapter(new AdapterOrder(listsewa,getApplicationContext()));
+                recyclerView.setAdapter(new AdapterOrder(listsewa, getApplicationContext()));
             }
 
             @Override

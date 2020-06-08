@@ -40,6 +40,8 @@ dependencies {
 
     implementation 'com.github.f0ris.sweetalert:library:1.5.1'
 
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

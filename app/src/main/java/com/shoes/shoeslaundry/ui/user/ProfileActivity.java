@@ -71,7 +71,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LandingPage.class);
         startActivity(intent);
-        finish();
+        finishAffinity();
     }
 
     @Override

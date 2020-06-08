@@ -8,5 +8,6 @@
     <color name="colorText">#0f121d</color>
     <color name="colorBackgroundWhite">#f8f8fa</color>
     <color name="colorCardWhite">#fdfdfd</color>
+    <color name="colorPlaceholder">#dddddd</color>
 
 </resources>

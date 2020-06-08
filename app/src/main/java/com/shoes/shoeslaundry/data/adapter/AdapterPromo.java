@@ -12,19 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.shoes.shoeslaundry.R;
-import com.shoes.shoeslaundry.data.model.Order;
-import com.shoes.shoeslaundry.data.model.Promotion;
+import com.shoes.shoeslaundry.data.model.Promo;
 
 import java.util.ArrayList;
 
 public class AdapterPromo extends RecyclerView.Adapter<AdapterPromo.ViewHolder> {
 
-    private final ArrayList<Promotion> listsewa;
+    private final ArrayList<Promo> listsewa;
     private final Context context;
 
-    public AdapterPromo(ArrayList<Promotion> listsewa, Context context) {
+    public AdapterPromo(ArrayList<Promo> listsewa, Context context) {
         this.listsewa = listsewa;
         this.context = context;
     }
@@ -38,7 +36,7 @@ public class AdapterPromo extends RecyclerView.Adapter<AdapterPromo.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        Promotion promo = listsewa.get(position);
+        Promo promo = listsewa.get(position);
         holder.display(promo);
     }
 
@@ -57,7 +55,7 @@ public class AdapterPromo extends RecyclerView.Adapter<AdapterPromo.ViewHolder> 
             tv_title = itemView.findViewById(R.id.titlepromotion);
         }
 
-        void display(Promotion promotion) {
+        void display(Promo promotion) {
             Glide.with(itemView.getContext())
                     .load(promotion.getPhoto())
                     .into(iv_item_photo);

@@ -52,17 +52,6 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser!=null) {
-            Intent intent = new Intent(LoginPage.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.backbutton:
@@ -92,11 +81,6 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
         PD.setCanceledOnTouchOutside(false);
         PD.show();
 
-        if (email.equals("admin") && password.equals("passwordadmin")) {
-            Intent intent3 = new Intent(LoginPage.this, MainAdminActivity.class);
-            startActivity(intent3);
-            finish();
-        } else {
             try {
                 if (password.length() > 0 && email.length() > 0) {
                     auth.signInWithEmailAndPassword(email, password)
@@ -107,9 +91,15 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
                                         PD.dismiss();
                                         // Sign in success, update UI with the signed-in user's information
                                         Toast.makeText(LoginPage.this, "Berhasil", Toast.LENGTH_SHORT).show();
-                                        Intent i = new Intent(LoginPage.this, MainActivity.class);
-                                        startActivity(i);
-                                        finish();
+                                        if (email.equals("admin@gmail.com") || password.equals("gscadmin1")) {
+                                            Intent intent3 = new Intent(LoginPage.this, MainAdminActivity.class);
+                                            startActivity(intent3);
+                                            finishAffinity();
+                                        } else {
+                                            Intent i = new Intent(LoginPage.this, MainActivity.class);
+                                            startActivity(i);
+                                            finishAffinity();
+                                        }
                                     } else {
                                         PD.dismiss();
                                         // If sign in fails, display a message to the user.
@@ -126,6 +116,6 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+
     }
 }

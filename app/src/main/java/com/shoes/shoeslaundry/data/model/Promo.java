@@ -3,14 +3,14 @@ package com.shoes.shoeslaundry.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Promotion implements Parcelable {
+public class Promo implements Parcelable {
 
     private String title, photo, description, idpromotion;
 
-    public Promotion() {
+    public Promo() {
     }
 
-    public Promotion(String title, String photo, String description, String idpromotion) {
+    public Promo(String title, String photo, String description, String idpromotion) {
         this.title = title;
         this.photo = photo;
         this.description = description;
@@ -47,22 +47,22 @@ public class Promotion implements Parcelable {
         dest.writeString(this.idpromotion);
     }
 
-    protected Promotion(Parcel in) {
+    protected Promo(Parcel in) {
         this.title = in.readString();
         this.photo = in.readString();
         this.description = in.readString();
         this.idpromotion = in.readString();
     }
 
-    public static final Parcelable.Creator<Promotion> CREATOR = new Parcelable.Creator<Promotion>() {
+    public static final Parcelable.Creator<Promo> CREATOR = new Parcelable.Creator<Promo>() {
         @Override
-        public Promotion createFromParcel(Parcel source) {
-            return new Promotion(source);
+        public Promo createFromParcel(Parcel source) {
+            return new Promo(source);
         }
 
         @Override
-        public Promotion[] newArray(int size) {
-            return new Promotion[size];
+        public Promo[] newArray(int size) {
+            return new Promo[size];
         }
     };
 }

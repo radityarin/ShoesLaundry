@@ -4,8 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context=".ui.generalactivity.SplashScreen">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background"
+        android:scaleType="centerCrop"/>
 
     <ImageView
         android:id="@+id/imageView"
@@ -13,7 +18,7 @@
         android:layout_height="300dp"
         android:scaleType="fitCenter"
         android:layout_centerInParent="true"
-        android:layout_margin="64dp"
+        android:layout_marginHorizontal="64dp"
         app:srcCompat="@drawable/wash"/>
     <TextView
         android:layout_below="@id/imageView"
