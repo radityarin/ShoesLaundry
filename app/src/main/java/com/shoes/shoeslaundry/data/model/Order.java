@@ -5,27 +5,37 @@ import android.os.Parcelable;
 
 public class Order implements Parcelable {
 
-    private String nama, iduser, namasepatu, ukuransepatu, warnasepatu, tanggaldrop, status;
+    private String name, ordernumber, iduser, shoesname, shoessize, shoescolour, droptime, washtype, status;
 
     public Order() {
     }
 
-    public Order(String nama, String iduser, String namasepatu, String ukuransepatu, String warnasepatu, String tanggaldrop, String status) {
-        this.nama = nama;
+    public Order(String name, String ordernumber, String iduser, String shoesname, String shoessize, String shoescolour, String droptime, String washtype, String status) {
+        this.name = name;
+        this.ordernumber = ordernumber;
         this.iduser = iduser;
-        this.namasepatu = namasepatu;
-        this.ukuransepatu = ukuransepatu;
-        this.warnasepatu = warnasepatu;
-        this.tanggaldrop = tanggaldrop;
+        this.shoesname = shoesname;
+        this.shoessize = shoessize;
+        this.shoescolour = shoescolour;
+        this.droptime = droptime;
+        this.washtype = washtype;
         this.status = status;
     }
 
-    public String getNama() {
-        return nama;
+    public String getName() {
+        return name;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getOrdernumber() {
+        return ordernumber;
+    }
+
+    public void setOrdernumber(String ordernumber) {
+        this.ordernumber = ordernumber;
     }
 
     public String getIduser() {
@@ -36,36 +46,44 @@ public class Order implements Parcelable {
         this.iduser = iduser;
     }
 
-    public String getNamasepatu() {
-        return namasepatu;
+    public String getShoesname() {
+        return shoesname;
     }
 
-    public void setNamasepatu(String namasepatu) {
-        this.namasepatu = namasepatu;
+    public void setShoesname(String shoesname) {
+        this.shoesname = shoesname;
     }
 
-    public String getUkuransepatu() {
-        return ukuransepatu;
+    public String getShoessize() {
+        return shoessize;
     }
 
-    public void setUkuransepatu(String ukuransepatu) {
-        this.ukuransepatu = ukuransepatu;
+    public void setShoessize(String shoessize) {
+        this.shoessize = shoessize;
     }
 
-    public String getWarnasepatu() {
-        return warnasepatu;
+    public String getShoescolour() {
+        return shoescolour;
     }
 
-    public void setWarnasepatu(String warnasepatu) {
-        this.warnasepatu = warnasepatu;
+    public void setShoescolour(String shoescolour) {
+        this.shoescolour = shoescolour;
     }
 
-    public String getTanggaldrop() {
-        return tanggaldrop;
+    public String getDroptime() {
+        return droptime;
     }
 
-    public void setTanggaldrop(String tanggaldrop) {
-        this.tanggaldrop = tanggaldrop;
+    public void setDroptime(String droptime) {
+        this.droptime = droptime;
+    }
+
+    public String getWashtype() {
+        return washtype;
+    }
+
+    public void setWashtype(String washtype) {
+        this.washtype = washtype;
     }
 
     public String getStatus() {
@@ -76,24 +94,32 @@ public class Order implements Parcelable {
         this.status = status;
     }
 
+    public static Creator<Order> getCREATOR() {
+        return CREATOR;
+    }
+
     protected Order(Parcel in) {
-        nama = in.readString();
+        name = in.readString();
+        ordernumber = in.readString();
         iduser = in.readString();
-        namasepatu = in.readString();
-        ukuransepatu = in.readString();
-        warnasepatu = in.readString();
-        tanggaldrop = in.readString();
+        shoesname = in.readString();
+        shoessize = in.readString();
+        shoescolour = in.readString();
+        droptime = in.readString();
+        washtype = in.readString();
         status = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(nama);
+        dest.writeString(name);
+        dest.writeString(ordernumber);
         dest.writeString(iduser);
-        dest.writeString(namasepatu);
-        dest.writeString(ukuransepatu);
-        dest.writeString(warnasepatu);
-        dest.writeString(tanggaldrop);
+        dest.writeString(shoesname);
+        dest.writeString(shoessize);
+        dest.writeString(shoescolour);
+        dest.writeString(droptime);
+        dest.writeString(washtype);
         dest.writeString(status);
     }
 

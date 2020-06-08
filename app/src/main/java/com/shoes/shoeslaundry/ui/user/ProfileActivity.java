@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +24,9 @@ import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private Button btn_logout, btn_editprofile, btn_back;
     private FirebaseAuth auth;
 
     @Override
@@ -31,7 +35,12 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         auth = FirebaseAuth.getInstance();
-
+        btn_logout = findViewById(R.id.btn_logout);
+        btn_editprofile = findViewById(R.id.btn_editprofile);
+        btn_back = findViewById(R.id.backbutton);
+        btn_logout.setOnClickListener(this);
+        btn_editprofile.setOnClickListener(this);
+        btn_back.setOnClickListener(this);
         displayProfile();
     }
 
@@ -63,5 +72,21 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LandingPage.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_logout:
+                logout();
+                break;
+            case R.id.btn_editprofile:
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.backbutton:
+                onBackPressed();
+                break;
+        }
     }
 }

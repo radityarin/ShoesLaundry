@@ -1,55 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardlokasi"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
-    android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
+    android:layout_marginLeft="32dp"
+    android:layout_height="180dp"
+    android:elevation="0dp"
+    app:cardCornerRadius="10dp"
     tools:targetApi="o">
 
-    <ImageView
-        android:id="@+id/logokategori"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_vertical"
-        android:contentDescription="Icon" />
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        tools:targetApi="o">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/namapenyewa"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/photopromotion"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/foto_lapangan" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/trending_gradient_shape" />
+
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lapangan A"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:paddingHorizontal="10dp"
+            android:layout_marginBottom="16dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            tools:targetApi="o">
 
-        <TextView
-            android:id="@+id/tanggalsewa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/date" />
+            <TextView
+                android:id="@+id/titlepromotion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lapangan_a"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/jamsewa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/_12_00_13_00" />
-
-        <TextView
-            android:id="@+id/statussewa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/proses_penjemputan"
-            android:textColor="@android:color/holo_green_dark"
-            android:textStyle="bold
-" />
-    </LinearLayout>
-</LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

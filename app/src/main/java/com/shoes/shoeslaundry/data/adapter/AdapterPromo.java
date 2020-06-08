@@ -5,10 +5,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.Order;
 import com.shoes.shoeslaundry.data.model.Promotion;
@@ -34,7 +38,8 @@ public class AdapterPromo extends RecyclerView.Adapter<AdapterPromo.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        holder.display(listsewa.get(position));
+        Promotion promo = listsewa.get(position);
+        holder.display(promo);
     }
 
     @Override
@@ -44,34 +49,19 @@ public class AdapterPromo extends RecyclerView.Adapter<AdapterPromo.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        final View view;
-
+        private ImageView iv_item_photo;
+        private TextView tv_title;
         ViewHolder(View itemView) {
             super(itemView);
-            view = itemView;
+            iv_item_photo = itemView.findViewById(R.id.photopromotion);
+            tv_title = itemView.findViewById(R.id.titlepromotion);
         }
 
         void display(Promotion promotion) {
-//            TextView tvnamalapangan = view.findViewById(R.id.namapenyewa);
-//            if (penyedia) {
-//                if (statussewa.equalsIgnoreCase("Belum dikonfirmasi")) {
-//                    tvnamalapangan.setText(namapenyewa);
-//                } else {
-//                    tvnamalapangan.setText(namapenyewa + " Lap. no " + nomorlapangan);
-//                }
-//            } else {
-//                if (statussewa.equalsIgnoreCase("Belum dikonfirmasi")) {
-//                    tvnamalapangan.setText(lapangansewa);
-//                } else {
-//                    tvnamalapangan.setText(lapangansewa + " Lap. no " + nomorlapangan);
-//                }
-//            }
-//            TextView tvtanggalsewa = view.findViewById(R.id.tanggalsewa);
-//            tvtanggalsewa.setText(tanggalsewa);
-//            TextView tvjamsewa = view.findViewById(R.id.jamsewa);
-//            tvjamsewa.setText(jamsewa);
-//            TextView tvstatussewa = view.findViewById(R.id.statussewa);
-//            tvstatussewa.setText(statussewa);
+            Glide.with(itemView.getContext())
+                    .load(promotion.getPhoto())
+                    .into(iv_item_photo);
+            tv_title.setText(promotion.getTitle());
         }
 
     }

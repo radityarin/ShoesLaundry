@@ -21,7 +21,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.shoes.shoeslaundry.R;
+import com.shoes.shoeslaundry.data.adapter.AdapterOrder;
 import com.shoes.shoeslaundry.data.adapter.AdapterPromo;
+import com.shoes.shoeslaundry.data.model.Order;
 import com.shoes.shoeslaundry.data.model.Promotion;
 import com.shoes.shoeslaundry.data.model.User;
 
@@ -35,17 +37,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView button_notification, button_profile;
     private TextView tv_name;
     private RecyclerView rv_promo, rv_order;
-    private LinearLayout button_track, button_chat, button_promo, button_location;
+    private LinearLayout button_track, button_chat, button_promo, button_history;
     private Button button_order_history;
-    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        name = getIntent().getStringExtra("name");
-        tv_name.setText(name);
 
         button_notification = findViewById(R.id.buttonnotification);
         button_profile = findViewById(R.id.buttonprofile);
@@ -55,21 +53,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_track = findViewById(R.id.buttontrack);
         button_chat = findViewById(R.id.buttonchat);
         button_promo = findViewById(R.id.buttonpromotion);
-        button_location = findViewById(R.id.buttonlocation);
-        button_order_history = findViewById(R.id.buttonorderhistory);
+        button_history = findViewById(R.id.buttonhistory);
+//        button_order_history = findViewById(R.id.buttonorderhistory);
 
         button_notification.setOnClickListener(this);
         button_profile.setOnClickListener(this);
         button_track.setOnClickListener(this);
         button_chat.setOnClickListener(this);
         button_promo.setOnClickListener(this);
-        button_location.setOnClickListener(this);
-        button_order_history.setOnClickListener(this);
+        button_history.setOnClickListener(this);
+
+        getPromotion();
+        getActiveOrder();
+        displayName();
     }
 
     private void getPromotion() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Promotion");
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Promo");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -90,6 +91,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void getActiveOrder() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Order");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Order> promotions = new ArrayList<>();
+                for (DataSnapshot dt : dataSnapshot.getChildren()) {
+                    Order promo = dt.getValue(Order.class);
+                    promotions.add(promo);
+                }
+                AdapterOrder adapterBencanaTerdekat = new AdapterOrder(promotions, getApplicationContext());
+                rv_order.setAdapter(adapterBencanaTerdekat);
+                rv_order.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void displayName() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -98,12 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User profil = dataSnapshot.getValue(User.class);
-                TextView nama = findViewById(R.id.namaprofile);
-                TextView email = findViewById(R.id.emailprofile);
-                TextView nohp = findViewById(R.id.nohpprofile);
-                nama.setText(Objects.requireNonNull(profil).getNamaUser());
-                email.setText(profil.getEmailUser());
-                nohp.setText(profil.getNomorHP());
+                tv_name.setText(Objects.requireNonNull(profil).getNamaUser());
             }
 
             @Override
@@ -135,13 +154,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intentPromotion = new Intent(MainActivity.this, PromotionActivity.class);
                 startActivity(intentPromotion);
                 break;
-            case R.id.buttonlocation:
-                Intent intentLocation = new Intent(MainActivity.this, LocationActivity.class);
+            case R.id.buttonhistory:
+                Intent intentLocation = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intentLocation);
-                break;
-            case R.id.buttonorderhistory:
-                Intent intentTrack2 = new Intent(MainActivity.this, TrackActivity.class);
-                startActivity(intentTrack2);
                 break;
         }
     }

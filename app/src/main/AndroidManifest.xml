@@ -11,18 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".ui.user.ProfileActivity"></activity>
+        <activity android:name=".ui.user.OrderDetailActivity"></activity>
+        <activity android:name=".ui.user.EditProfileActivity" />
+        <activity android:name=".ui.user.ProfileActivity" />
         <activity android:name=".ui.user.PromotionActivity" />
-        <activity android:name=".ui.user.LocationActivity" />
+        <activity android:name=".ui.user.HistoryActivity" />
         <activity android:name=".ui.user.TrackActivity" />
         <activity android:name=".ui.user.ChatActivity" />
-        <activity android:name=".ui.user.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.user.MainActivity" />
         <activity android:name=".ui.admin.MainAdminActivity" />
         <activity
             android:name=".ui.generalactivity.ForgotPasswordActivity"
@@ -35,7 +31,13 @@
             android:configChanges="orientation" />
         <activity
             android:name=".ui.generalactivity.SplashScreen"
-            android:configChanges="orientation" />
+            android:configChanges="orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.user.SignUpPage"
             android:configChanges="orientation" />

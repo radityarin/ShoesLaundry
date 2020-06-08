@@ -1,55 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="90dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="60dp"
     android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
     tools:targetApi="o">
-
-    <ImageView
-        android:id="@+id/logokategori"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_vertical"
-        android:contentDescription="Icon" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        tools:targetApi="o">
+        android:layout_height="match_parent"
+        android:background="@color/colorCardWhite"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
 
-        <TextView
-            android:id="@+id/namapenyewa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Lapangan A"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/logokategori"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="Icon"
+            android:src="@drawable/onprogress" />
 
-        <TextView
-            android:id="@+id/tanggalsewa"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date" />
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:orientation="vertical"
+            tools:targetApi="o">
 
-        <TextView
-            android:id="@+id/jamsewa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/_12_00_13_00" />
+            <TextView
+                android:id="@+id/ordernumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Order No : #123123123"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/statussewa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/proses_penjemputan"
-            android:textColor="@android:color/holo_green_dark"
-            android:textStyle="bold
-" />
+            <TextView
+                android:id="@+id/orderstatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/proses_penjemputan"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

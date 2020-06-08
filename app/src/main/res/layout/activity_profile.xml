@@ -9,10 +9,18 @@
     android:padding="32dp"
     tools:context="com.shoes.shoeslaundry.ui.user.ProfileActivity">
 
+    <Button
+        android:id="@+id/backbutton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/ic_chevron_left_black_24dp"
+        android:backgroundTint="@android:color/white" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:text="Profile"
         android:textColor="@android:color/white"
         android:textSize="40sp"
@@ -133,6 +141,32 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+
+        <Button
+            android:id="@+id/btn_editprofile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:layout_above="@id/btn_logout"
+            android:textSize="16sp"
+            android:textColor="@color/colorNegative"
+            android:textAllCaps="false"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/white"
+            android:background="@drawable/buttonsolidprimary"/>
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log Out"
+            android:textSize="16sp"
+            android:layout_alignParentBottom="true"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/colorNegative"
+            android:background="@drawable/buttonborder"/>
 
     </RelativeLayout>
 </LinearLayout>

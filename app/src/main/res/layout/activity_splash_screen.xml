@@ -4,18 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".ui.generalactivity.SplashScreen">
 
     <ImageView
         android:id="@+id/imageView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:scaleType="fitCenter"
+        android:layout_centerInParent="true"
+        android:layout_margin="64dp"
+        app:srcCompat="@drawable/wash"/>
+    <TextView
+        android:layout_below="@id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/splashscreen"
-        android:contentDescription="TODO" />
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/bgdarker"
-        android:contentDescription="TODO" />
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:text="Garage Shoes\nClean Laundry"/>
 </RelativeLayout>

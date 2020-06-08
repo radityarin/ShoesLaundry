@@ -1,6 +1,5 @@
 package com.shoes.shoeslaundry.data.adapter;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.Order;
+import com.shoes.shoeslaundry.ui.user.OrderDetailActivity;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,8 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        holder.display(listsewa.get(position));
+        Order order = listsewa.get(position);
+        holder.display(order);
     }
 
     @Override
@@ -45,34 +46,26 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        final View view;
+        private TextView tv_ordernumber;
+        private TextView tv_status;
 
         ViewHolder(View itemView) {
             super(itemView);
-            view = itemView;
+            tv_ordernumber = itemView.findViewById(R.id.ordernumber);
+            tv_status = itemView.findViewById(R.id.orderstatus);
         }
 
-        void display(Order order) {
-//            TextView tvnamalapangan = view.findViewById(R.id.namapenyewa);
-//            if (penyedia) {
-//                if (statussewa.equalsIgnoreCase("Belum dikonfirmasi")) {
-//                    tvnamalapangan.setText(namapenyewa);
-//                } else {
-//                    tvnamalapangan.setText(namapenyewa + " Lap. no " + nomorlapangan);
-//                }
-//            } else {
-//                if (statussewa.equalsIgnoreCase("Belum dikonfirmasi")) {
-//                    tvnamalapangan.setText(lapangansewa);
-//                } else {
-//                    tvnamalapangan.setText(lapangansewa + " Lap. no " + nomorlapangan);
-//                }
-//            }
-//            TextView tvtanggalsewa = view.findViewById(R.id.tanggalsewa);
-//            tvtanggalsewa.setText(tanggalsewa);
-//            TextView tvjamsewa = view.findViewById(R.id.jamsewa);
-//            tvjamsewa.setText(jamsewa);
-//            TextView tvstatussewa = view.findViewById(R.id.statussewa);
-//            tvstatussewa.setText(statussewa);
+        void display(final Order order) {
+            tv_ordernumber.setText("Order No : #" + order.getOrdernumber());
+            tv_status.setText(order.getStatus());
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, OrderDetailActivity.class);
+                    intent.putExtra("order",order);
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }
