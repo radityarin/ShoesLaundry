@@ -68,10 +68,10 @@ public class MainAdminActivity extends AppCompatActivity {
         fragmentTransaction.commit();
         setTitle("Order");
 
-        alarmReceiver = new AlarmReceiver();
-        alarmReceiverBencana = new AlarmReceiver();
-        alarmReceiver.setNewUsersAndBencanaAlarm(this, AlarmReceiver.TYPE_NEWUSER);
-        alarmReceiverBencana.setNewUsersAndBencanaAlarm(this,AlarmReceiver.TYPE_NEWBENCANA);
+//        alarmReceiver = new AlarmReceiver();
+//        alarmReceiverBencana = new AlarmReceiver();
+//        alarmReceiver.setNewUsersAndBencanaAlarm(this, AlarmReceiver.TYPE_NEWUSER);
+//        alarmReceiverBencana.setNewUsersAndBencanaAlarm(this,AlarmReceiver.TYPE_NEWBENCANA);
 
     }
 }

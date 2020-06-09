@@ -17,67 +17,59 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.shoes.shoeslaundry.R;
+import com.shoes.shoeslaundry.data.model.Message;
+import com.shoes.shoeslaundry.data.model.Order;
 import com.shoes.shoeslaundry.ui.admin.MainAdminActivity;
 
 import java.util.Calendar;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    public static final String TYPE_NEWUSER = "NewUser";
-    public static final String TYPE_NEWBENCANA = "NewBencana";
+    public static final String TYPE_NEWMESSAGE = "NEWSMESSAGE";
+    public static final String TYPE_NEWSTATUS = "NEWSTATUS";
+    public static final String TYPE_NEWORDER = "NEWORDER";
     private static final String EXTRA_TYPE = "type";
 
+    private final static int ID_NEWMESSAGE = 100;
+    private final static int ID_NEWSTATUS = 101;
+    private final static int ID_NEWORDER = 102;
 
-    private final static int ID_NEWUSER = 100;
-    private final static int ID_NEWBENCANA = 101;
+    private int idNotifNewMessage;
+    private int idNotifNewStatus;
+    private int idNotifNewOrder;
 
-    private int idNotifUser;
-    private int idNotifBencana;
-    private int newUser = 0;
-    private int newBencana = 0;
+    private int newUnreadmessages = 0;
+    private int newOrder = 0;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        idNotifUser = 1;
-        idNotifBencana = 2;
+        idNotifNewMessage = 1;
+        idNotifNewStatus = 2;
+        idNotifNewOrder = 3;
+
         String type = intent.getStringExtra(EXTRA_TYPE);
-//        if (type.equalsIgnoreCase(TYPE_NEWUSER)) {
-//            checkNewUsers(new NotifikasiCallback() {
-//                @Override
-//                public void onSuccess(int newUser) {
-//                    if (newUser != 0) {
-//                        showAlarmNotification(context, "User Baru", "Ada " + newUser + " user yang belum diverifikasi", idNotifUser);
-//                    }
-//                }
-//
-//                @Override
-//                public void onError(boolean failure) {
-//
-//                }
-//            });
-//        } if (type.equalsIgnoreCase(TYPE_NEWBENCANA)) {
-//            Log.d("cek", "masuk typebencana" + type);
-//            checkNewOrders(new NotifikasiCallback() {
-//                @Override
-//                public void onSuccess(int newUser) {
-//                    int newBencana = newUser;
-//                    if (newBencana != 0) {
-//                        showAlarmNotification(context, "Bencana Baru", "Ada " + newBencana + " bencana yang belum diverifikasi", idNotifBencana);
-//                    }
-//                }
-//
-//                @Override
-//                public void onError(boolean failure) {
-//
-//                }
-//            });
-//        }
+        if (type.equalsIgnoreCase(TYPE_NEWMESSAGE)) {
+            checkNewMessageUser(new MessageCallback() {
+                @Override
+                public void onSuccess(int newMessage) {
+                    if (newMessage != 0){
+                        showAlarmNotification(context,"Pesan Baru","Ada "+ newMessage+" pesan baru", idNotifNewMessage);
+                    }
+                }
+
+                @Override
+                public void onError(boolean failure) {
+
+                }
+            });
+        }
     }
 
     private void showAlarmNotification(Context context, String title, String message, int notifId) {
@@ -121,7 +113,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     }
 
-    public void setNewUsersAndBencanaAlarm(Context context, String type) {
+    public void setAlarm(Context context, String type) {
         Log.d("cek", "masuk setrepeating" + type);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
@@ -132,48 +124,32 @@ public class AlarmReceiver extends BroadcastReceiver {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, ID_NEWUSER, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, ID_NEWMESSAGE, intent, 0);
         if (alarmManager != null) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 10 * 60 * 1000, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60 * 1000, pendingIntent);
         }
     }
 
 
-    private void checkNewOrders(final NotifikasiCallback notifikasiCallback) {
+    private void checkNewMessageUser(final MessageCallback messageCallback) {
         Log.d("cek", "masuk checknewusers");
-        DatabaseReference sewaRef = FirebaseDatabase.getInstance().getReference().child("Order");
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        DatabaseReference sewaRef = FirebaseDatabase.getInstance().getReference().child("Message").child(auth.getUid());
         sewaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                newUnreadmessages = 0;
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
-//                    if (!dt.child("status").getValue().toString().equalsIgnoreCase("")) {
-//                        final User mUser = dt.getValue(User.class);
-//                        if (!mUser.isStatus() && !mUser.getFotoIdentitas().equals("")) {
-//                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                            String id = user.getUid();
-//
-//                            DatabaseReference adminInfo = FirebaseDatabase.getInstance().getReference().child("Users").child(id);
-//                            adminInfo.addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                    String kota = dataSnapshot.child("kota").getValue().toString();
-//                                    String fotoIdentitas = dataSnapshot.child("fotoIdentitas").getValue().toString();
-//                                    if(kota.equalsIgnoreCase(mUser.getKota()) && !fotoIdentitas.equals("")){
-//                                        newUser++;
-//                                    }
-//                                    notifikasiCallback.onSuccess(newUser);
-//                                    notifikasiCallback.onError(false);
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                }
-//                            });
-//                        }
-//                        newUser = 0;
-//                    }
+                    Message message = dt.getValue(Message.class);
+                    assert message != null;
+                    if (!message.isRead()) {
+                        newUnreadmessages++;
+                    }
                 }
+                Log.d("cek", "onDataChange: "+newUnreadmessages);
+                messageCallback.onSuccess(newUnreadmessages);
+                messageCallback.onError(false);
+                newUnreadmessages = 0;
             }
 
             @Override

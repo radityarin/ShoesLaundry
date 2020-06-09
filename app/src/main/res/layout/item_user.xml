@@ -14,13 +14,13 @@
         android:gravity="center_vertical"
         android:paddingHorizontal="32dp"
         android:text="Radit"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textSize="24sp"
+        android:textColor="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/tv_lastmessage"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 

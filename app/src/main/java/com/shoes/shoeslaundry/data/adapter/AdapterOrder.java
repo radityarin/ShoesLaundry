@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.Order;
+import com.shoes.shoeslaundry.ui.admin.AdminOrderDetailActivity;
 import com.shoes.shoeslaundry.ui.user.OrderDetailActivity;
 
 import java.util.ArrayList;
@@ -20,10 +21,12 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.ViewHolder> 
 
     private final ArrayList<Order> listsewa;
     private final Context context;
+    private boolean admin;
 
-    public AdapterOrder(ArrayList<Order> listsewa, Context context) {
+    public AdapterOrder(ArrayList<Order> listsewa, Context context, boolean admin) {
         this.listsewa = listsewa;
         this.context = context;
+        this.admin = admin;
     }
 
     @NonNull
@@ -58,15 +61,27 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.ViewHolder> 
         void display(final Order order) {
             tv_ordernumber.setText("Order No : #" + order.getOrdernumber());
             tv_status.setText(order.getStatus());
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, OrderDetailActivity.class);
-                    intent.putExtra("order",order);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
-            });
+            if (admin) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, AdminOrderDetailActivity.class);
+                        intent.putExtra("order", order);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                });
+            } else {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, OrderDetailActivity.class);
+                        intent.putExtra("order", order);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                });
+            }
         }
 
     }

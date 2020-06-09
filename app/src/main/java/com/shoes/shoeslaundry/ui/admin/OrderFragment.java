@@ -63,10 +63,11 @@ public class OrderFragment extends Fragment {
                 listsewa.clear();
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Order mSewa = dt.getValue(Order.class);
-                    listsewa.add(mSewa);
-
+                    if(!mSewa.getStatus().equals("Pesanan Selesai")) {
+                        listsewa.add(mSewa);
+                    }
                 }
-                recyclerView.setAdapter(new AdapterOrder(listsewa, getContext()));
+                recyclerView.setAdapter(new AdapterOrder(listsewa, getContext(),true));
             }
 
             @Override

@@ -20,13 +20,13 @@
             android:layout_width="60dp"
             android:layout_gravity="center"
             android:background="@drawable/ic_close_black_24dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorNegative"
             android:layout_height="60dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="You have not active order right now"
+            android:text="You have no active orders right now"
             android:textAlignment="center"
             android:textSize="20sp" />
     </LinearLayout>

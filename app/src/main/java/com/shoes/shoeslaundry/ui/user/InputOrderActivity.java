@@ -158,7 +158,7 @@ public class InputOrderActivity extends AppCompatActivity implements View.OnClic
         String key = FirebaseDatabase.getInstance().getReference().child("Order").push().getKey();
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Order").child(key);
 
-        Order order = new Order(nama, orderno, auth.getUid(), nohp, getTodayDate(), jenis, "Belum diterima", alamat, totalharga);
+        Order order = new Order(nama, orderno,key, auth.getUid(), nohp, getTodayDate(), jenis, "Belum diterima", alamat, totalharga);
         myRef.setValue(order);
 
         Intent intent = new Intent(InputOrderActivity.this, MainActivity.class);

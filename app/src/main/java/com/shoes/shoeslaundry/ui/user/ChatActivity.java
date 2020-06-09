@@ -75,6 +75,14 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        Button backbutton = findViewById(R.id.backbutton);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
@@ -178,8 +186,8 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Message friendlyMessage = new
-                        Message(mMessageEditText.getText().toString(),
-                        mUsername);
+                        Message(mFirebaseAuth.getUid(),mMessageEditText.getText().toString(),
+                        mUsername,false);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(mFirebaseAuth.getUid())
                         .push().setValue(friendlyMessage);
                 mMessageEditText.setText("");

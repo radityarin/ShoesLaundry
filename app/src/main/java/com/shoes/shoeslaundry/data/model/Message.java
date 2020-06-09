@@ -17,20 +17,44 @@ package com.shoes.shoeslaundry.data.model;
 
 public class Message {
 
+    private String iduser;
     private String id;
     private String text;
     private String name;
+    private boolean read;
 
     public Message() {
     }
 
-    public Message(String text, String name) {
+    public Message(String iduser, String text, String name, boolean read) {
+        this.iduser = iduser;
         this.text = text;
         this.name = name;
+        this.read = read;
+    }
+
+    public String getIduser() {
+        return iduser;
+    }
+
+    public void setIduser(String iduser) {
+        this.iduser = iduser;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isRead() {
+        return read;
     }
 
     public void setId(String id) {
@@ -41,15 +65,11 @@ public class Message {
         this.text = text;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getText() {
-        return text;
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }

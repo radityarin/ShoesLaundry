@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.shoes.shoeslaundry.ui.user.EditProfileActivity">
+    tools:context="com.shoes.shoeslaundry.ui.user.PromotionDetailActivity">
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="100sp"
-        android:text="Edit profile"/>
+        android:text="prmotion detail"/>
 
 </LinearLayout>

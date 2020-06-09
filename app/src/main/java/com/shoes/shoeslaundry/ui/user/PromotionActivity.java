@@ -39,10 +39,10 @@ public class PromotionActivity extends AppCompatActivity {
             }
         });
         auth = FirebaseAuth.getInstance();
-        getOrder();
+        getPromotion();
     }
 
-    private void getOrder() {
+    private void getPromotion() {
 
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setNestedScrollingEnabled(false);
@@ -58,7 +58,7 @@ public class PromotionActivity extends AppCompatActivity {
                     Promo mSewa = dt.getValue(Promo.class);
                         listsewa.add(mSewa);
                 }
-                recyclerView.setAdapter(new AdapterPromo(listsewa, getApplicationContext()));
+                recyclerView.setAdapter(new AdapterPromo(listsewa, getApplicationContext(),false));
             }
 
             @Override

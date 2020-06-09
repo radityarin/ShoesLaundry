@@ -181,8 +181,8 @@ public class ChatAdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Message friendlyMessage = new
-                        Message(mMessageEditText.getText().toString(),
-                        mUsername);
+                        Message(mFirebaseAuth.getUid(),mMessageEditText.getText().toString(),
+                        mUsername,false);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(uidpelanggan)
                         .push().setValue(friendlyMessage);
                 mMessageEditText.setText("");

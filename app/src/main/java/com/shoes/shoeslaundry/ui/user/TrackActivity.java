@@ -62,7 +62,7 @@ public class TrackActivity extends AppCompatActivity {
                         listsewa.add(mSewa);
                     }
                 }
-                recyclerView.setAdapter(new AdapterOrder(listsewa, getApplicationContext()));
+                recyclerView.setAdapter(new AdapterOrder(listsewa, getApplicationContext(),false));
             }
 
             @Override
