@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".ui.user.InputOrderActivity"></activity>
+        <activity android:name=".ui.admin.ChatAdminActivity" />
+        <activity android:name=".ui.user.InputOrderActivity" />
         <activity android:name=".ui.user.OrderActivity" />
         <activity android:name=".ui.user.OrderDetailActivity" />
         <activity android:name=".ui.user.EditProfileActivity" />
@@ -26,16 +27,16 @@
         <activity android:name=".ui.user.MainActivity" />
         <activity android:name=".ui.admin.MainAdminActivity" />
         <activity
-            android:name=".ui.generalactivity.ForgotPasswordActivity"
+            android:name=".ui.common.ForgotPasswordActivity"
             android:configChanges="orientation" />
         <activity
-            android:name=".ui.generalactivity.LoginPage"
+            android:name=".ui.common.LoginPage"
             android:configChanges="orientation" />
         <activity
-            android:name=".ui.generalactivity.LandingPage"
+            android:name=".ui.common.LandingPage"
             android:configChanges="orientation" />
         <activity
-            android:name=".ui.generalactivity.SplashScreen"
+            android:name=".ui.common.SplashScreen"
             android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.user.SignUpPage"
+            android:name=".ui.common.SignUpPage"
             android:configChanges="orientation" />
     </application>
 

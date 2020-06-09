@@ -1,4 +1,4 @@
-package com.shoes.shoeslaundry.ui.generalactivity;
+package com.shoes.shoeslaundry.ui.common;
 
 import android.content.Intent;
 import android.os.Bundle;

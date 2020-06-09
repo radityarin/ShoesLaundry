@@ -1,4 +1,4 @@
-package com.shoes.shoeslaundry.ui.user;
+package com.shoes.shoeslaundry.ui.common;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,11 +16,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.User;
-import com.shoes.shoeslaundry.ui.generalactivity.LoginPage;
+import com.shoes.shoeslaundry.ui.user.MainActivity;
 
 import java.util.Objects;
 
@@ -75,6 +77,12 @@ public class SignUpPage extends AppCompatActivity implements View.OnClickListene
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
+                                    FirebaseUser user = auth.getCurrentUser();
+
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(nama).build();
+
+                                    user.updateProfile(profileUpdates);
                                     PD.dismiss();
                                     Toast.makeText(
                                             SignUpPage.this,

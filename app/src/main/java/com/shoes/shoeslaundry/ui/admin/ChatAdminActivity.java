@@ -1,4 +1,4 @@
-package com.shoes.shoeslaundry.ui.user;
+package com.shoes.shoeslaundry.ui.admin;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +29,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.Message;
+import com.shoes.shoeslaundry.ui.user.ChatActivity;
+import com.shoes.shoeslaundry.ui.user.MainActivity;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatAdminActivity extends AppCompatActivity {
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
@@ -53,6 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     public static final String ANONYMOUS = "anonymous";
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     private String mUsername;
+    private String uidpelanggan;
     private String mPhotoUrl;
     private SharedPreferences mSharedPreferences;
     private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
@@ -74,12 +76,13 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_chat_admin);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
-        mUsername = getIntent().getStringExtra("name");
-
+        mUsername = "ADMIN";
+        uidpelanggan = getIntent().getStringExtra("uidpelanggan");
+//    uidpelanggan = "5ot3imPaULRzKfNRglsESISgDY53";
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -108,7 +111,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         };
 
-        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(mFirebaseAuth.getUid());
+        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(uidpelanggan);
         FirebaseRecyclerOptions<Message> options =
                 new FirebaseRecyclerOptions.Builder<Message>()
                         .setQuery(messagesRef, parser)
@@ -180,7 +183,7 @@ public class ChatActivity extends AppCompatActivity {
                 Message friendlyMessage = new
                         Message(mMessageEditText.getText().toString(),
                         mUsername);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(mFirebaseAuth.getUid())
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(uidpelanggan)
                         .push().setValue(friendlyMessage);
                 mMessageEditText.setText("");
             }
@@ -210,5 +213,4 @@ public class ChatActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
     }
-
 }

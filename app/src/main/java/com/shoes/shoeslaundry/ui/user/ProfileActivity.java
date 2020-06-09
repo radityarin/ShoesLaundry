@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.User;
-import com.shoes.shoeslaundry.ui.generalactivity.LandingPage;
+import com.shoes.shoeslaundry.ui.common.LandingPage;
 
 import java.util.Objects;
 

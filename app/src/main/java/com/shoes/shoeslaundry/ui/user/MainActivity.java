@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     AdapterOrder adapterBencanaTerdekat = new AdapterOrder(promotions, getApplicationContext());
                     rv_order.setVisibility(View.VISIBLE);
                     rv_order.setAdapter(adapterBencanaTerdekat);
-                    rv_order.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                    rv_order.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 }
             }
 
@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.buttonchat:
                 Intent intentChat = new Intent(MainActivity.this, ChatActivity.class);
+                intentChat.putExtra("name",tv_name.getText().toString());
                 startActivity(intentChat);
                 break;
             case R.id.buttonpromotion:

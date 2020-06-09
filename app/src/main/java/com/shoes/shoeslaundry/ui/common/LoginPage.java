@@ -1,4 +1,4 @@
-package com.shoes.shoeslaundry.ui.generalactivity;
+package com.shoes.shoeslaundry.ui.common;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,11 +16,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.ui.admin.MainAdminActivity;
 import com.shoes.shoeslaundry.ui.user.MainActivity;
-import com.shoes.shoeslaundry.ui.user.SignUpPage;
 
 public class LoginPage extends AppCompatActivity implements View.OnClickListener {
 
@@ -81,6 +79,7 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
         PD.setCanceledOnTouchOutside(false);
         PD.show();
 
+
             try {
                 if (password.length() > 0 && email.length() > 0) {
                     auth.signInWithEmailAndPassword(email, password)
@@ -91,7 +90,7 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
                                         PD.dismiss();
                                         // Sign in success, update UI with the signed-in user's information
                                         Toast.makeText(LoginPage.this, "Berhasil", Toast.LENGTH_SHORT).show();
-                                        if (email.equals("admin@gmail.com") || password.equals("gscadmin1")) {
+                                        if (email.equals("admin@gmail.com") || password.equals("gscadmin123")) {
                                             Intent intent3 = new Intent(LoginPage.this, MainAdminActivity.class);
                                             startActivity(intent3);
                                             finishAffinity();
@@ -116,6 +115,6 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
 
-    }
 }

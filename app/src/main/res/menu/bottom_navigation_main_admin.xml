@@ -5,12 +5,28 @@
         android:id="@+id/orderbutton"
         android:enabled="true"
         android:icon="@drawable/ic_receipt_black_24dp"
-        android:title="Non Aktif"
-        app:showAsAction="ifRoom"/>
+        android:iconTint="@android:color/darker_gray"
+        android:title="Order"
+        app:showAsAction="never"/>
     <item
-        android:id="@+id/historybutton"
+        android:id="@+id/promobutton"
         android:enabled="true"
-        android:icon="@drawable/ic_check_black_24dp"
-        android:title="Aktif"
-        app:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_info_black_24dp"
+        android:iconTint="@android:color/darker_gray"
+        android:title="Promo"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/chatbutton"
+        android:enabled="true"
+        android:icon="@drawable/ic_chat_bubble_black_24dp"
+        android:iconTint="@android:color/darker_gray"
+        android:title="Chat"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/riwayatbutton"
+        android:enabled="true"
+        android:icon="@drawable/ic_history_black_24dp"
+        android:iconTint="@android:color/darker_gray"
+        android:title="History"
+        app:showAsAction="never"/>
 </menu>

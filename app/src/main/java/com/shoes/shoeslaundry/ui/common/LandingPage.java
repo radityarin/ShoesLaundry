@@ -1,8 +1,7 @@
-package com.shoes.shoeslaundry.ui.generalactivity;
+package com.shoes.shoeslaundry.ui.common;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -14,7 +13,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.ui.admin.MainAdminActivity;
 import com.shoes.shoeslaundry.ui.user.MainActivity;
-import com.shoes.shoeslaundry.ui.user.SignUpPage;
 
 
 public class LandingPage extends AppCompatActivity implements View.OnClickListener {
@@ -41,7 +39,7 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
         super.onStart();
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            if (currentUser.getUid().equals("vU2mjwXog6bSXuuE0Vpq1RhsAuZ2")) {
+            if (currentUser.getUid().equals("obW9ciDSKlOkt3aWbmzptxM5w2v2")) {
                 Intent intent = new Intent(LandingPage.this, MainAdminActivity.class);
                 startActivity(intent);
                 finish();
