@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
-    app:cardCornerRadius="10dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="0dp"
+    android:layout_marginVertical="8dp"
     tools:targetApi="o">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorCardWhite"
+        android:background="@android:color/white"
         android:orientation="horizontal"
+        android:paddingVertical="4dp"
         android:paddingHorizontal="16dp">
 
         <ImageView

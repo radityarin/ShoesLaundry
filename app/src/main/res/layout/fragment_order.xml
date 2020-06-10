@@ -7,13 +7,12 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background"
+        android:src="@drawable/background"
         android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background">
+        android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -24,12 +23,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/actionbar"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:paddingHorizontal="16dp"
-                    android:gravity="center_vertical"
                     android:background="@android:color/white"
                     android:orientation="horizontal">
                     <TextView
@@ -39,8 +37,17 @@
                         android:gravity="center_vertical"
                         android:textSize="28sp"
                         android:textColor="@color/colorPrimary"/>
+                    
+                    <Button
+                        android:id="@+id/btn_logout"
+                        android:layout_width="50dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_exit_to_app_black_24dp"
+                        android:backgroundTint="@color/colorNegative"/>
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"

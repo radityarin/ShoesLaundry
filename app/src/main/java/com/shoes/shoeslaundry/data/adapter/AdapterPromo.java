@@ -78,7 +78,7 @@ public class AdapterPromo extends RecyclerView.Adapter<AdapterPromo.ViewHolder> 
                         context.startActivity(intent);
                     } else {
                         Intent intent = new Intent(context, PromotionDetailActivity.class);
-                        intent.putExtra("idpromo", promotion.getIdpromotion());
+                        intent.putExtra("promo", promotion);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }

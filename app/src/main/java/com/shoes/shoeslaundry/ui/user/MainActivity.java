@@ -8,11 +8,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +33,10 @@ import com.shoes.shoeslaundry.data.model.Order;
 import com.shoes.shoeslaundry.data.model.Promo;
 import com.shoes.shoeslaundry.data.model.User;
 import com.shoes.shoeslaundry.utils.AlarmReceiver;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
+import com.synnapps.carouselview.ViewListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -38,10 +47,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ImageView button_notification, button_profile;
     private TextView tv_name, tv_active_order;
-    private RecyclerView rv_promo, rv_order;
+    private RecyclerView rv_order;
     private LinearLayout button_track, button_chat, button_promo, button_history;
-    private LinearLayout ll_noorder, ll_promo;
+    private LinearLayout ll_promo, ll_active_order;
     private FloatingActionButton fab_order;
+
+    private Button btn_saran;
+    private EditText edt_saran;
 
     private ShimmerFrameLayout mShimmerViewContainer;
     private ShimmerFrameLayout mShimmerViewContainer2;
@@ -49,12 +61,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth auth;
 
     private AlarmReceiver alarmReceiverMessage, alarmReceiverStatus;
+    CarouselView customCarouselView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        customCarouselView = findViewById(R.id.carouselView);
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer2 = findViewById(R.id.shimmer_view_container2);
 
@@ -62,15 +75,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_profile = findViewById(R.id.buttonprofile);
         tv_name = findViewById(R.id.tv_name);
         tv_active_order = findViewById(R.id.tv_active_order);
-        rv_promo = findViewById(R.id.recycler_view_promo);
         rv_order = findViewById(R.id.recycler_view_order);
         button_track = findViewById(R.id.buttontrack);
         button_chat = findViewById(R.id.buttonchat);
         button_promo = findViewById(R.id.buttonpromotion);
         button_history = findViewById(R.id.buttonhistory);
-        ll_noorder = findViewById(R.id.ll_no_order);
+        ll_active_order = findViewById(R.id.ll_active_order);
         ll_promo = findViewById(R.id.ll_no_promo);
         fab_order = findViewById(R.id.buttonorder);
+        btn_saran = findViewById(R.id.btn_saran);
+        edt_saran = findViewById(R.id.edt_saran);
 
         button_notification.setOnClickListener(this);
         button_profile.setOnClickListener(this);
@@ -79,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_promo.setOnClickListener(this);
         button_history.setOnClickListener(this);
         fab_order.setOnClickListener(this);
+        btn_saran.setOnClickListener(this);
 
         auth = FirebaseAuth.getInstance();
 
@@ -90,10 +105,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setNotification() {
-        alarmReceiverMessage = new AlarmReceiver();
-        alarmReceiverStatus = new AlarmReceiver();
-        alarmReceiverMessage.setAlarm(this, AlarmReceiver.TYPE_NEWMESSAGE);
-        alarmReceiverStatus.setAlarm(this,AlarmReceiver.TYPE_NEWSTATUS);
+//        alarmReceiverMessage = new AlarmReceiver();
+//        alarmReceiverStatus = new AlarmReceiver();
+//        alarmReceiverMessage.setAlarm(this, AlarmReceiver.TYPE_NEWMESSAGE);
+//        alarmReceiverStatus.setAlarm(this,AlarmReceiver.TYPE_NEWSTATUS);
     }
 
     private void getPromotion() {
@@ -102,21 +117,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Promo> promotions = new ArrayList<>();
+                final ArrayList<Promo> promotions = new ArrayList<>();
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Promo promo = dt.getValue(Promo.class);
                     promotions.add(promo);
                 }
+
                 mShimmerViewContainer.stopShimmerAnimation();
                 mShimmerViewContainer.setVisibility(View.GONE);
                 if (promotions.size() == 0) {
                     ll_promo.setVisibility(View.GONE);
                 } else {
+                    customCarouselView.setVisibility(View.VISIBLE);
                     ll_promo.setVisibility(View.VISIBLE);
-                    AdapterPromo adapterBencanaTerdekat = new AdapterPromo(promotions, getApplicationContext(), false);
-                    rv_promo.setVisibility(View.VISIBLE);
-                    rv_promo.setAdapter(adapterBencanaTerdekat);
-                    rv_promo.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                    customCarouselView.setViewListener(new ViewListener() {
+                        @Override
+                        public View setViewForPosition(int position) {
+                            View customView = getLayoutInflater().inflate(R.layout.item_card_promotion, null);
+
+                            TextView titlepromotion = (TextView) customView.findViewById(R.id.titlepromotion);
+                            ImageView photopromotion = (ImageView) customView.findViewById(R.id.photopromotion);
+                            Glide.with(getApplicationContext()).load(promotions.get(position).getPhoto()).into(photopromotion);
+
+                            titlepromotion.setText(promotions.get(position).getTitle());
+
+                            customCarouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+
+                            return customView;
+                        }
+                    });
+                    customCarouselView.setPageCount(promotions.size());
+                    customCarouselView.setImageClickListener(new ImageClickListener() {
+                        @Override
+                        public void onClick(int position) {
+                            Intent intent = new Intent(MainActivity.this, PromotionDetailActivity.class);
+                            intent.putExtra("promo", promotions.get(position));
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
 
@@ -134,20 +172,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<Order> promotions = new ArrayList<>();
+                ArrayList<Order> promotions2 = new ArrayList<>();
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Order promo = dt.getValue(Order.class);
                     if (Objects.requireNonNull(auth.getUid()).equals(promo.getIduser()) && !promo.getStatus().equals("Pesanan Selesai")) {
                         promotions.add(promo);
                     }
                 }
-
+                if (promotions.size() > 0) {
+                    promotions2.add(promotions.get(0));
+                }
                 mShimmerViewContainer2.stopShimmerAnimation();
                 mShimmerViewContainer2.setVisibility(View.GONE);
                 if (promotions.size() == 0) {
-                    ll_noorder.setVisibility(View.VISIBLE);
+//                    ll_noorder.setVisibility(View.VISIBLE);
+                    ll_active_order.setVisibility(View.GONE);
                 } else {
-                    tv_active_order.setText("Active Order (" + promotions.size()+")");
-                    AdapterOrder adapterBencanaTerdekat = new AdapterOrder(promotions, getApplicationContext(),false);
+                    tv_active_order.setText("Active Order (" + promotions.size() + ")");
+                    AdapterOrder adapterBencanaTerdekat = new AdapterOrder(promotions2, getApplicationContext(), false);
                     rv_order.setVisibility(View.VISIBLE);
                     rv_order.setAdapter(adapterBencanaTerdekat);
                     rv_order.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -194,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.buttonchat:
                 Intent intentChat = new Intent(MainActivity.this, ChatActivity.class);
-                intentChat.putExtra("name",tv_name.getText().toString());
+                intentChat.putExtra("name", tv_name.getText().toString());
                 startActivity(intentChat);
                 break;
             case R.id.buttonpromotion:
@@ -208,7 +250,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.buttonorder:
                 Intent intentOrder = new Intent(MainActivity.this, OrderActivity.class);
                 startActivity(intentOrder);
+                break;
+            case R.id.btn_saran:
+                kirimSaran();
+                break;
         }
+    }
+
+    private void kirimSaran() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Saran");
+        databaseReference.push().setValue(edt_saran.getText().toString());
+        Toast.makeText(this, "Terima kasih telah memberi saran kepada kami", Toast.LENGTH_LONG).show();
+        edt_saran.setText("");
     }
 
     @Override

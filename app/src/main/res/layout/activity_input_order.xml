@@ -62,10 +62,10 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:layout_weight="1"
+                    android:layout_weight=".8"
                     android:id="@+id/alamatpelanggan"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:maxLines="1"
                     android:inputType="text"
                     android:lines="1"
@@ -76,12 +76,14 @@
 
                 <Button
                     android:id="@+id/btn_lokasi"
-                    android:layout_weight="5"
+                    android:layout_weight=".2"
                     android:layout_marginLeft="8dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_add_location_black_24dp"
-                    android:backgroundTint="@color/colorPrimary"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/buttonsolidprimary"
+                    android:textColor="@android:color/white"
+                    android:text="Lokasi saat ini"
+                    android:textAllCaps="false"/>
 
             </LinearLayout>
 

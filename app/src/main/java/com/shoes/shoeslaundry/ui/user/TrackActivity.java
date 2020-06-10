@@ -58,7 +58,7 @@ public class TrackActivity extends AppCompatActivity {
                 listsewa.clear();
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Order mSewa = dt.getValue(Order.class);
-                    if (mSewa.getIduser().equals(auth.getUid())) {
+                    if (mSewa.getIduser().equals(auth.getUid()) && !mSewa.getStatus().equals("Pesanan Selesai")) {
                         listsewa.add(mSewa);
                     }
                 }

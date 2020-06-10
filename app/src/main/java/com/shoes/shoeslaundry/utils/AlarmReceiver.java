@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,11 +23,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.Message;
 import com.shoes.shoeslaundry.data.model.Order;
 import com.shoes.shoeslaundry.ui.admin.MainAdminActivity;
+import com.shoes.shoeslaundry.ui.common.LandingPage;
 
 import java.util.Calendar;
 
@@ -59,8 +62,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             checkNewMessageUser(new MessageCallback() {
                 @Override
                 public void onSuccess(int newMessage) {
-                    if (newMessage != 0){
-                        showAlarmNotification(context,"Pesan Baru","Ada "+ newMessage+" pesan baru", idNotifNewMessage);
+                    if (newMessage != 0) {
+                        showAlarmNotification(context, "Pesan Baru", "Ada " + newMessage + " pesan baru", idNotifNewMessage);
                     }
                 }
 
@@ -69,10 +72,25 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 }
             });
+        } else if (type.equalsIgnoreCase(TYPE_NEWSTATUS)) {
+            checkNewStatus(new StatusCallback() {
+                @Override
+                public void onSuccess(Order order) {
+                    if(order!=null){
+                        showAlarmNotification(context, "Status Baru", "Order #" + order.getOrdernumber() + " status : " + order.getStatus(), idNotifNewStatus);
+                    }
+                }
+
+                @Override
+                public void onError(boolean failure) {
+
+                }
+            });
+
         }
     }
 
-    private void showAlarmNotification(Context context, String title, String message, int notifId) {
+    public void showAlarmNotification(Context context, String title, String message, int notifId) {
         String CHANNEL_ID = "Channel_1";
         String CHANNEL_NAME = "AlarmManager channel";
 
@@ -133,7 +151,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void checkNewMessageUser(final MessageCallback messageCallback) {
         Log.d("cek", "masuk checknewusers");
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
         DatabaseReference sewaRef = FirebaseDatabase.getInstance().getReference().child("Message").child(auth.getUid());
         sewaRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -142,14 +160,38 @@ public class AlarmReceiver extends BroadcastReceiver {
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Message message = dt.getValue(Message.class);
                     assert message != null;
-                    if (!message.isRead()) {
+                    if (!message.isRead() && !message.getIduser().equals(auth.getUid())) {
                         newUnreadmessages++;
                     }
                 }
-                Log.d("cek", "onDataChange: "+newUnreadmessages);
+                Log.d("cek", "onDataChange: " + newUnreadmessages);
                 messageCallback.onSuccess(newUnreadmessages);
                 messageCallback.onError(false);
                 newUnreadmessages = 0;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void checkNewStatus(final StatusCallback statusCallback) {
+        Log.d("cek", "masuk checknewstatus");
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseDatabase.getInstance().getReference().child("Order").orderByChild("iduser").equalTo(auth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final Order order = dataSnapshot.getValue(Order.class);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        statusCallback.onSuccess(order);
+                        statusCallback.onError(false);
+                    }
+                }, 5000L);
             }
 
             @Override
