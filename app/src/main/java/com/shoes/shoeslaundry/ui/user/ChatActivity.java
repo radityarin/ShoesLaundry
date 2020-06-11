@@ -331,7 +331,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Token token = dt.getValue(Token.class);
-                    Data data = new Data(mFirebaseAuth.getUid(), name + " : " + text, finalTitle, adminUID, R.drawable.wash);
+                    Data data = new Data(mFirebaseAuth.getUid(), name + " : " + text, finalTitle, adminUID, R.drawable.wash,"chat");
                     Sender sender = new Sender(data, token.getToken());
                     Gson gson = new Gson();
                     String json = gson.toJson(sender);

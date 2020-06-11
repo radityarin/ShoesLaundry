@@ -195,7 +195,7 @@ public class InputOrderActivity extends AppCompatActivity implements View.OnClic
             title = "New Message";
         } else if (title.equals("new_status")) {
             title = "New Status";
-        } else if (title.equals("new_status")) {
+        } else if (title.equals("new_order")) {
             title = "New Order";
         }
         DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
@@ -206,7 +206,7 @@ public class InputOrderActivity extends AppCompatActivity implements View.OnClic
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Token token = dt.getValue(Token.class);
-                    Data data = new Data(mFirebaseAuth.getUid(), name + " : " + text, finalTitle, hisUID, R.drawable.wash);
+                    Data data = new Data(mFirebaseAuth.getUid(), name + " : " + text, finalTitle, hisUID, R.drawable.wash,"order");
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<Response>() {

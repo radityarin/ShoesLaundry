@@ -139,7 +139,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity implements View.
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Token token = dt.getValue(Token.class);
-                    Data data = new Data(auth.getUid(), "Order #"+name + " : " + status, finalTitle, hisUID, R.drawable.wash);
+                    Data data = new Data(auth.getUid(), "Order #"+name + " : " + status, finalTitle, hisUID, R.drawable.wash,"status");
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender)
                             .enqueue(new Callback<Response>() {

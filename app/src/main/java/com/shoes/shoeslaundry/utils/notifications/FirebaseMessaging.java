@@ -25,7 +25,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.shoes.shoeslaundry.ui.admin.ChatAdminActivity;
+import com.shoes.shoeslaundry.ui.admin.MainAdminActivity;
+import com.shoes.shoeslaundry.ui.common.LandingPage;
 import com.shoes.shoeslaundry.ui.user.ChatActivity;
+import com.shoes.shoeslaundry.ui.user.OrderActivity;
+import com.shoes.shoeslaundry.ui.user.TrackActivity;
 
 import java.util.Objects;
 
@@ -36,7 +40,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         super.onNewToken(s);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String tokenRefresh = FirebaseInstanceId.getInstance().getToken();
-        if(user!=null){
+        if (user != null) {
             updateToken(tokenRefresh);
         }
     }
@@ -71,6 +75,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         Token token = new Token(tokenRefresh);
         ref.child(user.getUid()).setValue(token);
     }
+
     private void sendNormalNotification(RemoteMessage remoteMessage) {
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
@@ -99,7 +104,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         if (i > 0) {
             j = i;
         }
-        notificationManager.notify(j,builder.build());
+        notificationManager.notify(j, builder.build());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -108,16 +113,29 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
+        String type = remoteMessage.getData().get("type");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
-        Log.d("cek", "sendOAndAboveNotification: "+user);
+        Log.d("cek", "sendOAndAboveNotification: " + user);
         Intent intent;
-        if (!user.equals("obW9ciDSKlOkt3aWbmzptxM5w2v2")){
-             intent = new Intent(this, ChatAdminActivity.class);
-            intent.putExtra("uidpelanggan", user);
-        } else {
-            intent = new Intent(this, ChatActivity.class);
-            intent.putExtra("name", "me");
+        switch (type) {
+            case "chat":
+                if (!user.equals("obW9ciDSKlOkt3aWbmzptxM5w2v2")) {
+                    intent = new Intent(this, ChatAdminActivity.class);
+                    intent.putExtra("uidpelanggan", user);
+                } else {
+                    intent = new Intent(this, ChatActivity.class);
+                    intent.putExtra("name", "me");
+                }
+                break;
+            case "order":
+                intent = new Intent(this, MainAdminActivity.class);
+                break;
+            case "status":
+                intent = new Intent(this, TrackActivity.class);
+                break;
+            default:
+                intent = new Intent(this, LandingPage.class);
         }
         int i = Integer.parseInt(user.replaceAll("[\\D]", ""));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -126,12 +144,12 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
         Uri defSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         OreoAndAboveNotification notification1 = new OreoAndAboveNotification(this);
-        Notification.Builder builder = notification1.getONotification(title,body,pendingIntent,defSoundUri,icon);
+        Notification.Builder builder = notification1.getONotification(title, body, pendingIntent, defSoundUri, icon);
 
         int j = 0;
         if (i > 0) {
             j = i;
         }
-        notification1.getManager().notify(j,builder.build());
+        notification1.getManager().notify(j, builder.build());
     }
 }
