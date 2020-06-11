@@ -16,26 +16,26 @@
     <LinearLayout
         android:id="@+id/actionbar"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@android:color/white"
+        android:layout_height="50dp"
+        android:paddingHorizontal="16dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp">
-
+        android:background="@android:color/white"
+        android:orientation="horizontal">
         <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/backbutton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/ic_arrow_back_black_24dp"
-            android:backgroundTint="@color/colorPrimary" />
+            android:backgroundTint="@color/colorPrimary"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:gravity="center_vertical"
             android:text="Chat"
+            android:gravity="center_vertical"
+            android:textSize="24sp"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:layout_marginLeft="16dp"/>
 
     </LinearLayout>
 
@@ -51,7 +51,6 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="16dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/buttonsolidprimary"
         android:orientation="horizontal"

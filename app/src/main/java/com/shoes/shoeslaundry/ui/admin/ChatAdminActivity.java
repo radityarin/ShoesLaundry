@@ -1,5 +1,6 @@
 package com.shoes.shoeslaundry.ui.admin;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -25,12 +28,27 @@ import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.Message;
 import com.shoes.shoeslaundry.ui.user.ChatActivity;
 import com.shoes.shoeslaundry.ui.user.MainActivity;
+import com.shoes.shoeslaundry.utils.notifications.APIService;
+import com.shoes.shoeslaundry.utils.notifications.Client;
+import com.shoes.shoeslaundry.utils.notifications.Data;
+import com.shoes.shoeslaundry.utils.notifications.Response;
+import com.shoes.shoeslaundry.utils.notifications.Sender;
+import com.shoes.shoeslaundry.utils.notifications.Token;
+
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class ChatAdminActivity extends AppCompatActivity {
 
@@ -72,6 +90,10 @@ public class ChatAdminActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder>
             mFirebaseAdapter;
+    APIService apiService;
+
+    private static final int ID_SENDER = 1;
+    private static final int ID_RECEIVER = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +141,19 @@ public class ChatAdminActivity extends AppCompatActivity {
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(options) {
             @Override
             public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                View v1;
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                return new MessageViewHolder(inflater.inflate(R.layout.item_message, viewGroup, false));
+                switch (i){
+                    case ID_SENDER:
+                        v1 = inflater.inflate(R.layout.item_message_sender,viewGroup,false);
+                        break;
+                    case ID_RECEIVER:
+                        v1 = inflater.inflate(R.layout.item_message,viewGroup,false);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + i);
+                }
+                return new MessageViewHolder(v1);
             }
 
             @Override
@@ -133,6 +166,20 @@ public class ChatAdminActivity extends AppCompatActivity {
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
                 }
                 viewHolder.messengerTextView.setText(friendlyMessage.getName());
+            }
+
+            private boolean isSender(int position) {
+                String uidsender = mFirebaseAuth.getUid();
+                return uidsender.equals(getItem(position).getIduser());
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                if (isSender(position)) {
+                    return ID_SENDER;
+                } else {
+                    return ID_RECEIVER;
+                }
             }
         };
 
@@ -186,10 +233,76 @@ public class ChatAdminActivity extends AppCompatActivity {
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(uidpelanggan)
                         .push().setValue(friendlyMessage);
                 mMessageEditText.setText("");
+
+                sendNotification(uidpelanggan, friendlyMessage.getName(), friendlyMessage.getText(), "new_message");
+
+            }
+        });
+
+        seenMessage();
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
+
+    }
+
+    private void sendNotification(final String hisUID, final String name, final String text, String title) {
+        if (title.equals("new_message")) {
+            title = "New Message";
+        } else if (title.equals("new_status")) {
+            title = "New Status";
+        }
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(hisUID);
+        String finalTitle = title;
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dt : dataSnapshot.getChildren()) {
+                    Token token = dt.getValue(Token.class);
+                    Data data = new Data(mFirebaseAuth.getUid(), name + " : " + text, finalTitle, hisUID, R.drawable.wash);
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+//                                    Toast.makeText(ChatAdminActivity.this, "" + response.message(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
 
+    private void seenMessage() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Message").child(uidpelanggan);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dt: dataSnapshot.getChildren()){
+                    Message message = dt.getValue(Message.class);
+                    if(message.getIduser().equals(uidpelanggan) && !message.isRead()){
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("read",true);
+                        dt.getRef().updateChildren(hashMap);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     @Override
     public void onStart() {
         super.onStart();

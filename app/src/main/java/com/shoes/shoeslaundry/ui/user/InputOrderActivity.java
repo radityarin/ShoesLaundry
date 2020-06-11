@@ -29,10 +29,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.Order;
 import com.shoes.shoeslaundry.data.model.User;
+import com.shoes.shoeslaundry.utils.notifications.APIService;
+import com.shoes.shoeslaundry.utils.notifications.Client;
+import com.shoes.shoeslaundry.utils.notifications.Data;
+import com.shoes.shoeslaundry.utils.notifications.Response;
+import com.shoes.shoeslaundry.utils.notifications.Sender;
+import com.shoes.shoeslaundry.utils.notifications.Token;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -41,6 +49,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 import static android.content.ContentValues.TAG;
 
@@ -60,13 +71,21 @@ public class InputOrderActivity extends AppCompatActivity implements View.OnClic
 
     private TextView tv_nama, tv_nohp, tv_alamat, tv_jeniscuci, tv_totalharga;
 
+    private FirebaseAuth mFirebaseAuth;
+    private APIService apiService;
+    private String adminUID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_order);
+        adminUID = "obW9ciDSKlOkt3aWbmzptxM5w2v2";
 
         washtype = getIntent().getStringExtra("washtype");
         totalprice = getIntent().getIntExtra("totalprice", 0);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
 
         tv_washtype = findViewById(R.id.washtype);
         tv_totalorder = findViewById(R.id.tv_totalorder);
@@ -79,6 +98,9 @@ public class InputOrderActivity extends AppCompatActivity implements View.OnClic
         tv_washtype.setText(washtype);
 
         getOrderID();
+
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
+
     }
 
     @Override
@@ -158,13 +180,56 @@ public class InputOrderActivity extends AppCompatActivity implements View.OnClic
         String key = FirebaseDatabase.getInstance().getReference().child("Order").push().getKey();
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Order").child(key);
 
-        Order order = new Order(nama, orderno,key, auth.getUid(), nohp, getTodayDate(), jenis, "Belum diterima", alamat, totalharga);
+        Order order = new Order(nama, orderno, key, auth.getUid(), nohp, getTodayDate(), jenis, "Belum diterima", alamat, totalharga);
         myRef.setValue(order);
+
+        sendNotification(adminUID, order.getName(), order.getOrdernumber(), "new_order");
 
         Intent intent = new Intent(InputOrderActivity.this, MainActivity.class);
         startActivity(intent);
         finishAffinity();
     }
+
+    private void sendNotification(final String hisUID, final String name, final String text, String title) {
+        if (title.equals("new_message")) {
+            title = "New Message";
+        } else if (title.equals("new_status")) {
+            title = "New Status";
+        } else if (title.equals("new_status")) {
+            title = "New Order";
+        }
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(hisUID);
+        String finalTitle = title;
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dt : dataSnapshot.getChildren()) {
+                    Token token = dt.getValue(Token.class);
+                    Data data = new Data(mFirebaseAuth.getUid(), name + " : " + text, finalTitle, hisUID, R.drawable.wash);
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+//                                    Toast.makeText(ChatActivity.this, "" + response.message(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private String getTodayDate() {
         Calendar calendar = Calendar.getInstance();

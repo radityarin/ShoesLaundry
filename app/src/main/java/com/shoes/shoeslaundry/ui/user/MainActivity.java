@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,20 +23,27 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.adapter.AdapterOrder;
 import com.shoes.shoeslaundry.data.adapter.AdapterPromo;
 import com.shoes.shoeslaundry.data.model.Order;
 import com.shoes.shoeslaundry.data.model.Promo;
 import com.shoes.shoeslaundry.data.model.User;
+import com.shoes.shoeslaundry.ui.common.LandingPage;
 import com.shoes.shoeslaundry.utils.AlarmReceiver;
+import com.shoes.shoeslaundry.utils.notifications.Token;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
@@ -62,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AlarmReceiver alarmReceiverMessage, alarmReceiverStatus;
     CarouselView customCarouselView;
+
+    String mUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,14 +114,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getActiveOrder();
         displayName();
 
-        setNotification();
+        checkUserStatus();
+
+        updateToken(FirebaseInstanceId.getInstance().getToken());
     }
 
-    private void setNotification() {
-//        alarmReceiverMessage = new AlarmReceiver();
-//        alarmReceiverStatus = new AlarmReceiver();
-//        alarmReceiverMessage.setAlarm(this, AlarmReceiver.TYPE_NEWMESSAGE);
-//        alarmReceiverStatus.setAlarm(this,AlarmReceiver.TYPE_NEWSTATUS);
+    private void updateToken(String token) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token mToken = new Token(token);
+        databaseReference.child(mUID).setValue(mToken);
+    }
+
+    private void checkUserStatus(){
+        FirebaseUser user = auth.getCurrentUser();
+        if(user!= null){
+            mUID = user.getUid();
+
+            SharedPreferences sp = getSharedPreferences("SP_USER",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("Current_USERID",mUID);
+            editor.apply();
+        } else {
+            startActivity(new Intent(MainActivity.this, LandingPage.class));
+            finish();
+        }
     }
 
     private void getPromotion() {
@@ -141,7 +170,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             titlepromotion.setText(promotions.get(position).getTitle());
 
-                            customCarouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+                            customCarouselView.setIndicatorVisibility(View.GONE);
+
+//                            customCarouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
 
                             return customView;
                         }
@@ -266,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onStart() {
+        checkUserStatus();
         mShimmerViewContainer.startShimmerAnimation();
         mShimmerViewContainer2.startShimmerAnimation();
         super.onStart();
@@ -273,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onResume() {
+        checkUserStatus();
         mShimmerViewContainer.startShimmerAnimation();
         mShimmerViewContainer2.startShimmerAnimation();
         super.onResume();

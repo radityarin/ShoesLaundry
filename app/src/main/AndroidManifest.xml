@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -17,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".ui.admin.EditPromotionActivity"></activity>
+        <activity android:name=".ui.admin.EditPromotionActivity"/>
         <activity android:name=".ui.user.PromotionDetailActivity" />
         <activity android:name=".ui.admin.CreatePromotionActivity" />
         <activity android:name=".ui.admin.AdminOrderDetailActivity" />
@@ -55,11 +56,37 @@
             android:name=".ui.common.SignUpPage"
             android:configChanges="orientation" />
 
-        <receiver
-            android:name=".utils.AlarmReceiver"
+        <!--        <receiver-->
+        <!--            android:name=".utils.AlarmReceiver"-->
+        <!--            android:enabled="true"-->
+        <!--            android:exported="true"-->
+        <!--            android:permission="" />-->
+
+<!--        <service-->
+<!--            android:name=".utils.notifications.FirebaseService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
+
+        <service
+            android:name=".utils.notifications.FirebaseMessaging"
             android:enabled="true"
-            android:exported="true"
-            android:permission="" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/wash" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
+
     </application>
 
 </manifest>

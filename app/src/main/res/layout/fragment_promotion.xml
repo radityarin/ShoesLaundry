@@ -27,7 +27,6 @@
                     android:id="@+id/actionbar"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:paddingHorizontal="16dp"
                     android:gravity="center_vertical"
                     android:background="@android:color/white"
                     android:orientation="horizontal">
@@ -36,6 +35,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="Promo"
+                        android:layout_marginLeft="16dp"
                         android:gravity="center_vertical"
                         android:textSize="28sp"
                         android:textColor="@color/colorPrimary"/>
@@ -46,8 +46,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="16dp">
+                    android:layout_height="match_parent">
 
                 </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>

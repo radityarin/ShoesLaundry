@@ -16,26 +16,27 @@
     <LinearLayout
         android:id="@+id/actionbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingHorizontal="16dp"
-        android:gravity="center_vertical"
+        android:layout_height="50dp"
         android:background="@android:color/white"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
         <Button
             android:id="@+id/backbutton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/ic_arrow_back_black_24dp"
-            android:backgroundTint="@color/colorPrimary"/>
+            android:backgroundTint="@color/colorPrimary" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Chat"
+            android:layout_marginLeft="16dp"
             android:gravity="center_vertical"
-            android:textSize="32sp"
+            android:text="Chat"
             android:textColor="@color/colorPrimary"
-            android:layout_marginLeft="16dp"/>
+            android:textSize="24sp" />
 
     </LinearLayout>
 
@@ -51,12 +52,11 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="16dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/buttonsolidprimary"
         android:orientation="horizontal"
-        android:paddingTop="16dp"
         android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
         android:paddingBottom="16dp">
 
         <EditText
