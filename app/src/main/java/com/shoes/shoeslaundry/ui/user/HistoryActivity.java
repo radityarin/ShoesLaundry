@@ -28,10 +28,10 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        getOrder();
+        getOrderHistory();
     }
 
-    private void getOrder() {
+    private void getOrderHistory() {
         auth = FirebaseAuth.getInstance();
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setNestedScrollingEnabled(false);
@@ -42,14 +42,14 @@ public class HistoryActivity extends AppCompatActivity {
         sewaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Order> listorder = new ArrayList<>();
+                ArrayList<Order> listHistory = new ArrayList<>();
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Order mSewa = dt.getValue(Order.class);
                     if (mSewa.getStatus().equals("Pesanan Selesai") && mSewa.getIduser().equals(auth.getUid())) {
-                        listorder.add(mSewa);
+                        listHistory.add(mSewa);
                     }
                 }
-                recyclerView.setAdapter(new AdapterOrder(listorder, getApplicationContext(), false));
+                recyclerView.setAdapter(new AdapterOrder(listHistory, getApplicationContext(), false));
             }
 
             @Override

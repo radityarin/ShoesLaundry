@@ -52,11 +52,14 @@ import com.synnapps.carouselview.ViewListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageView button_notification, button_profile;
+    private ImageView button_profile;
     private TextView tv_name, tv_active_order;
     private RecyclerView rv_order;
     private LinearLayout button_track, button_chat, button_promo, button_history;
@@ -71,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FirebaseAuth auth;
 
-    private AlarmReceiver alarmReceiverMessage, alarmReceiverStatus;
     CarouselView customCarouselView;
 
     String mUID;
@@ -84,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer2 = findViewById(R.id.shimmer_view_container2);
 
-        button_notification = findViewById(R.id.buttonnotification);
         button_profile = findViewById(R.id.buttonprofile);
         tv_name = findViewById(R.id.tv_name);
         tv_active_order = findViewById(R.id.tv_active_order);
@@ -99,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_saran = findViewById(R.id.btn_saran);
         edt_saran = findViewById(R.id.edt_saran);
 
-        button_notification.setOnClickListener(this);
         button_profile.setOnClickListener(this);
         button_track.setOnClickListener(this);
         button_chat.setOnClickListener(this);
@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         auth = FirebaseAuth.getInstance();
 
+        showcase();
+
         getPromotion();
         getActiveOrder();
         displayName();
@@ -117,6 +119,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkUserStatus();
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
+    }
+
+    private void showcase() {
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, "1");
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(fab_order,
+                "Untuk melakukan pemesanan", "Ok");
+
+        sequence.addSequenceItem(button_track,
+                "Untuk melihat order saat ini", "Ok");
+
+        sequence.addSequenceItem(button_chat,
+                "Untuk komunikasi dengan pihak admin laundry", "Ok");
+
+        sequence.addSequenceItem(button_promo,
+                "Untuk melihat seluruh promo", "Ok");
+
+        sequence.addSequenceItem(button_history,
+                "Untuk melihat riwayat pesanan", "Ok");
+
+        sequence.start();
     }
 
     private void updateToken(String token) {
@@ -172,8 +200,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             customCarouselView.setIndicatorVisibility(View.GONE);
 
-//                            customCarouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
-
                             return customView;
                         }
                     });
@@ -202,25 +228,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Order> promotions = new ArrayList<>();
-                ArrayList<Order> promotions2 = new ArrayList<>();
+                ArrayList<Order> allOrder = new ArrayList<>();
+                ArrayList<Order> lastOrder = new ArrayList<>();
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Order promo = dt.getValue(Order.class);
                     if (Objects.requireNonNull(auth.getUid()).equals(promo.getIduser()) && !promo.getStatus().equals("Pesanan Selesai")) {
-                        promotions.add(promo);
+                        allOrder.add(promo);
                     }
                 }
-                if (promotions.size() > 0) {
-                    promotions2.add(promotions.get(0));
+                if (allOrder.size() > 0) {
+                    lastOrder.add(allOrder.get(0));
                 }
                 mShimmerViewContainer2.stopShimmerAnimation();
                 mShimmerViewContainer2.setVisibility(View.GONE);
-                if (promotions.size() == 0) {
-//                    ll_noorder.setVisibility(View.VISIBLE);
+                if (allOrder.size() == 0) {
                     ll_active_order.setVisibility(View.GONE);
                 } else {
-                    tv_active_order.setText("Active Order (" + promotions.size() + ")");
-                    AdapterOrder adapterBencanaTerdekat = new AdapterOrder(promotions2, getApplicationContext(), false);
+                    tv_active_order.setText("Active Order (" + allOrder.size() + ")");
+                    AdapterOrder adapterBencanaTerdekat = new AdapterOrder(lastOrder, getApplicationContext(), false);
                     rv_order.setVisibility(View.VISIBLE);
                     rv_order.setAdapter(adapterBencanaTerdekat);
                     rv_order.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -255,8 +280,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.buttonnotification:
-                break;
             case R.id.buttonprofile:
                 Intent intentProfile = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intentProfile);

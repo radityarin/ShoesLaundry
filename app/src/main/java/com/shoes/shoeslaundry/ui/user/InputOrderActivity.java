@@ -176,18 +176,22 @@ public class InputOrderActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void order(String nama, String nohp, String alamat, String jenis, int totalharga, String orderno) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String key = FirebaseDatabase.getInstance().getReference().child("Order").push().getKey();
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Order").child(key);
+        if (nama.isEmpty() && nohp.isEmpty() && alamat.isEmpty() && jenis.isEmpty() && totalharga == 0 && orderno.isEmpty()){
+            Toast.makeText(this, "Lengkapi semua kolom", Toast.LENGTH_SHORT).show();
+        } else {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            String key = FirebaseDatabase.getInstance().getReference().child("Order").push().getKey();
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Order").child(key);
 
-        Order order = new Order(nama, orderno, key, auth.getUid(), nohp, getTodayDate(), jenis, "Belum diterima", alamat, totalharga);
-        myRef.setValue(order);
+            Order order = new Order(nama, orderno, key, auth.getUid(), nohp, getTodayDate(), jenis, "Belum diterima", alamat, totalharga);
+            myRef.setValue(order);
 
-        sendNotification(adminUID, order.getName(), order.getOrdernumber(), "new_order");
+            sendNotification(adminUID, order.getName(), order.getOrdernumber(), "new_order");
 
-        Intent intent = new Intent(InputOrderActivity.this, MainActivity.class);
-        startActivity(intent);
-        finishAffinity();
+            Intent intent = new Intent(InputOrderActivity.this, MainActivity.class);
+            startActivity(intent);
+            finishAffinity();
+        }
     }
 
     private void sendNotification(final String hisUID, final String name, final String text, String title) {

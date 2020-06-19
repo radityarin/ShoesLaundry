@@ -62,24 +62,18 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.ViewHolder> 
             tv_ordernumber.setText("Order No : #" + order.getOrdernumber());
             tv_status.setText(order.getStatus());
             if (admin) {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, AdminOrderDetailActivity.class);
-                        intent.putExtra("order", order);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    }
+                itemView.setOnClickListener(v -> {
+                    Intent intent = new Intent(context, AdminOrderDetailActivity.class);
+                    intent.putExtra("order", order);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
                 });
             } else {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, OrderDetailActivity.class);
-                        intent.putExtra("order", order);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    }
+                itemView.setOnClickListener(v -> {
+                    Intent intent = new Intent(context, OrderDetailActivity.class);
+                    intent.putExtra("order", order);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
                 });
             }
         }

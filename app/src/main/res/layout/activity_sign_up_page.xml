@@ -102,7 +102,7 @@
                 android:background="@color/Transparent"
                 android:text="@string/sudah_memiliki_akun_login_disini"
                 android:textAllCaps="false"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
         </LinearLayout>
 </RelativeLayout>

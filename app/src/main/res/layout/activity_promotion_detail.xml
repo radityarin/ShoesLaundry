@@ -37,9 +37,9 @@
     <ImageView
         android:id="@+id/iv_fotopromo"
         android:layout_width="match_parent"
-        android:scaleType="centerCrop"
         android:layout_height="200dp"
-        android:background="@android:color/black" />
+        android:background="@android:color/black"
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,22 +54,22 @@
             android:background="@android:color/white"
             android:padding="16dp"
             android:text="Title"
-            android:textColor="@color/text_color"
             android:textAlignment="center"
+            android:textColor="@color/colorText"
             android:textSize="24sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="8dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="1dp"
                 android:layout_weight="1"
                 android:background="@android:color/white"
-                android:layout_marginRight="1dp"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -83,17 +83,18 @@
                     android:id="@+id/tv_startdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="26 Juni 1999"            android:textColor="@color/text_color"
+                    android:text="26 Juni 1999"
+                    android:textAlignment="center"
 
-                    android:textAlignment="center" />
+                    android:textColor="@color/colorText" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
                 android:layout_weight="1"
                 android:background="@android:color/white"
-                android:layout_marginLeft="1dp"
                 android:orientation="vertical"
 
                 android:padding="16dp">
@@ -108,9 +109,10 @@
                     android:id="@+id/tv_enddate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="26 Juni 1999"            android:textColor="@color/text_color"
+                    android:text="26 Juni 1999"
+                    android:textAlignment="center"
 
-                    android:textAlignment="center" />
+                    android:textColor="@color/colorText" />
             </LinearLayout>
         </LinearLayout>
 
@@ -122,7 +124,8 @@
             android:layout_marginTop="8dp"
             android:background="@android:color/white"
             android:padding="16dp"
-            android:text="Description"            android:textColor="@color/text_color"
+            android:text="Description"
+            android:textColor="@color/colorText"
 
             android:textSize="16sp" />
 

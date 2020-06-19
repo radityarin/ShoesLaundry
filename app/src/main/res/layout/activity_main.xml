@@ -41,13 +41,6 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/buttonnotification"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@drawable/ic_notifications_black_24dp" />
-
-                    <ImageView
                         android:id="@+id/buttonprofile"
                         android:layout_width="30dp"
                         android:layout_height="30dp"

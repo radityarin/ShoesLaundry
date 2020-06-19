@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -123,14 +124,24 @@ public class CreatePromotionActivity extends AppCompatActivity implements View.O
     private void createPromotion() {
         String key = FirebaseDatabase.getInstance().getReference().child("Promo").push().getKey();
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Promo").child(key);
-        Promo promo = new Promo();
-        promo.setTitle(et_judulpromo.getText().toString());
-        promo.setDescription(et_deskripsipromo.getText().toString());
-        promo.setPhoto(urlfotopromo);
-        promo.setStartdate(getTodayDate());
-        promo.setEnddate(tanggal);
-        promo.setIdpromotion(key);
-        myRef.setValue(promo);
+        String title = et_judulpromo.getText().toString();
+        String description = et_deskripsipromo.getText().toString();
+        String photo = urlfotopromo;
+        String startdate = getTodayDate();
+        String enddate = tanggal;
+        String idpromo = key;
+        if (title.isEmpty() && description.isEmpty() && photo.isEmpty() && startdate.isEmpty() && startdate.isEmpty() && enddate.isEmpty() && idpromo.isEmpty()){
+            Toast.makeText(this, "Lengkapi semua kolom", Toast.LENGTH_SHORT).show();
+        } else {
+            Promo promo = new Promo();
+            promo.setTitle(title);
+            promo.setDescription(description);
+            promo.setPhoto(photo);
+            promo.setStartdate(startdate);
+            promo.setEnddate(enddate);
+            promo.setIdpromotion(idpromo);
+            myRef.setValue(promo);
+        }
         Intent intent = new Intent(CreatePromotionActivity.this,MainAdminActivity.class);
         startActivity(intent);
         finishAffinity();

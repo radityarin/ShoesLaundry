@@ -52,8 +52,8 @@ public class SignUpPage extends AppCompatActivity implements View.OnClickListene
         inputNOHP = findViewById(R.id.noHp);
         inputPassword = findViewById(R.id.password);
 
-        Button btndaftar = findViewById(R.id.login);
-        btndaftar.setOnClickListener(this);
+        Button btnlogin = findViewById(R.id.login);
+        btnlogin.setOnClickListener(this);
 
         Button btnDaftar = findViewById(R.id.buttondaftar);
         btnDaftar.setOnClickListener(this);

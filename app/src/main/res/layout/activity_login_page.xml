@@ -92,7 +92,7 @@
             android:background="@color/Transparent"
             android:text="@string/belum_memiliki_akun_daftar_disini"
             android:textAllCaps="false"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/colorPrimary"
             android:textSize="16sp" />
     </LinearLayout>
 
