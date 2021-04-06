@@ -22,15 +22,17 @@ public class Message {
     private String text;
     private String name;
     private boolean read;
+    private String imageUrl;
 
     public Message() {
     }
 
-    public Message(String iduser, String text, String name, boolean read) {
+    public Message(String iduser, String text, String name, boolean read, String imageUrl) {
         this.iduser = iduser;
         this.text = text;
         this.name = name;
         this.read = read;
+        this.imageUrl = imageUrl;
     }
 
     public String getIduser() {
@@ -71,5 +73,13 @@ public class Message {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

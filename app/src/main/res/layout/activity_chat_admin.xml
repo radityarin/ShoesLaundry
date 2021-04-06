@@ -58,6 +58,11 @@
         android:paddingHorizontal="16dp"
         android:paddingBottom="16dp">
 
+        <ImageView
+            android:id="@+id/addMessageImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_add_black_24dp"/>
         <EditText
             android:id="@+id/messageEditText"
             android:layout_width="0dp"

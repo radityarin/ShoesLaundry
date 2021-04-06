@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -22,9 +23,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +37,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.shoes.shoeslaundry.R;
 import com.shoes.shoeslaundry.data.model.Message;
@@ -55,11 +62,14 @@ public class ChatAdminActivity extends AppCompatActivity {
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         TextView messengerTextView;
+        ImageView messageImageView;
 
         public MessageViewHolder(View v) {
             super(v);
             messengerTextView = (TextView) itemView.findViewById(R.id.messageTextView);
             messageTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
+            messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
+
         }
     }
 
@@ -93,7 +103,9 @@ public class ChatAdminActivity extends AppCompatActivity {
     APIService apiService;
 
     private static final int ID_SENDER = 1;
+    private static final int ID_SENDER_IMAGE = 3;
     private static final int ID_RECEIVER = 2;
+    private static final int ID_RECEIVER_IMAGE = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +162,12 @@ public class ChatAdminActivity extends AppCompatActivity {
                     case ID_RECEIVER:
                         v1 = inflater.inflate(R.layout.item_message,viewGroup,false);
                         break;
+                    case ID_SENDER_IMAGE:
+                        v1 = inflater.inflate(R.layout.item_message_sender_image,viewGroup,false);
+                        break;
+                    case ID_RECEIVER_IMAGE:
+                        v1 = inflater.inflate(R.layout.item_message_image,viewGroup,false);
+                        break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + i);
                 }
@@ -164,6 +182,33 @@ public class ChatAdminActivity extends AppCompatActivity {
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
+                }else if (friendlyMessage.getImageUrl() != null) {
+                    String imageUrl = friendlyMessage.getImageUrl();
+                    if (imageUrl.startsWith("gs://")) {
+                        StorageReference storageReference = FirebaseStorage.getInstance()
+                                .getReferenceFromUrl(imageUrl);
+                        storageReference.getDownloadUrl().addOnCompleteListener(
+                                new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            String downloadUrl = task.getResult().toString();
+                                            Glide.with(viewHolder.messageImageView.getContext())
+                                                    .load(downloadUrl)
+                                                    .into(viewHolder.messageImageView);
+                                        } else {
+                                            Log.w(TAG, "Getting download url was not successful.",
+                                                    task.getException());
+                                        }
+                                    }
+                                });
+                    } else {
+                        Glide.with(viewHolder.messageImageView.getContext())
+                                .load(friendlyMessage.getImageUrl())
+                                .into(viewHolder.messageImageView);
+                    }
+                    viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
+                    viewHolder.messageTextView.setVisibility(TextView.GONE);
                 }
                 viewHolder.messengerTextView.setText(friendlyMessage.getName());
             }
@@ -173,12 +218,24 @@ public class ChatAdminActivity extends AppCompatActivity {
                 return uidsender.equals(getItem(position).getIduser());
             }
 
+            private boolean isImage(int position){
+                return getItem(position).getImageUrl() != null;
+            }
+
             @Override
             public int getItemViewType(int position) {
                 if (isSender(position)) {
-                    return ID_SENDER;
+                    if(isImage(position)){
+                        return ID_SENDER_IMAGE;
+                    } else {
+                        return ID_SENDER;
+                    }
                 } else {
-                    return ID_RECEIVER;
+                    if(isImage(position)){
+                        return ID_RECEIVER_IMAGE;
+                    } else {
+                        return ID_RECEIVER;
+                    }
                 }
             }
         };
@@ -229,13 +286,24 @@ public class ChatAdminActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Message friendlyMessage = new
                         Message(mFirebaseAuth.getUid(),mMessageEditText.getText().toString(),
-                        mUsername,false);
+                        mUsername,false,null);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(uidpelanggan)
                         .push().setValue(friendlyMessage);
                 mMessageEditText.setText("");
 
                 sendNotification(uidpelanggan, friendlyMessage.getName(), friendlyMessage.getText(), "new_message");
 
+            }
+        });
+
+        mAddMessageImageView = (ImageView) findViewById(R.id.addMessageImageView);
+        mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
 
@@ -325,5 +393,68 @@ public class ChatAdminActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    final Uri uri = data.getData();
+                    Log.d(TAG, "Uri: " + uri.toString());
+
+                    Message tempMessage = new Message(mFirebaseAuth.getUid(),null, mUsername, false,
+                            LOADING_IMAGE_URL);
+                    mFirebaseDatabaseReference.child(MESSAGES_CHILD).push()
+                            .setValue(tempMessage, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError,
+                                                       DatabaseReference databaseReference) {
+                                    if (databaseError == null) {
+                                        String key = databaseReference.getKey();
+                                        StorageReference storageReference =
+                                                FirebaseStorage.getInstance()
+                                                        .getReference(mFirebaseUser.getUid())
+                                                        .child(key)
+                                                        .child(uri.getLastPathSegment());
+
+                                        putImageInStorage(storageReference, uri, key);
+                                    } else {
+                                        Log.w(TAG, "Unable to write message to database.",
+                                                databaseError.toException());
+                                    }
+                                }
+                            });
+                }
+            }
+        }
+    }
+    private void putImageInStorage(StorageReference storageReference, Uri uri, final String key) {
+        storageReference.putFile(uri).addOnCompleteListener(ChatAdminActivity.this,
+                new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            task.getResult().getMetadata().getReference().getDownloadUrl()
+                                    .addOnCompleteListener(ChatAdminActivity.this,
+                                            new OnCompleteListener<Uri>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Uri> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Message friendlyMessage = new Message(mFirebaseAuth.getUid(),null,mUsername,false,task.getResult().toString());
+                                                        mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(uidpelanggan).push()
+                                                                .setValue(friendlyMessage);
+                                                    }
+                                                }
+                                            });
+                        } else {
+                            Log.w(TAG, "Image upload task was not successful.",
+                                    task.getException());
+                        }
+                    }
+                });
     }
 }
