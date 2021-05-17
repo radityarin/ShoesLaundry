@@ -1,15 +1,11 @@
 package com.shoes.shoeslaundry.ui.admin;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -18,60 +14,46 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.shoes.shoeslaundry.R;
-import com.shoes.shoeslaundry.data.adapter.AdapterMonth;
 import com.shoes.shoeslaundry.data.adapter.AdapterOrder;
 import com.shoes.shoeslaundry.data.model.Order;
 
 import java.util.ArrayList;
 
+public class HistoryMonthActivity extends AppCompatActivity {
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class HistoryFragment extends Fragment {
-
-    private ArrayList<String> listMonth;
+    private ArrayList<Order> listsewa;
+    private FirebaseAuth auth;
     private RecyclerView recyclerView;
 
-    public HistoryFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_history, container, false);
-        recyclerView = view.findViewById(R.id.recycler_view);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_history_month);
+        recyclerView = findViewById(R.id.recycler_view);
 
+        auth = FirebaseAuth.getInstance();
         getOrder();
-        return view;
     }
 
     private void getOrder() {
-        listMonth = new ArrayList<>();
+        listsewa = new ArrayList<>();
 
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         DatabaseReference sewaRef = FirebaseDatabase.getInstance().getReference().child("Order");
         sewaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listMonth.clear();
+                listsewa.clear();
                 for (DataSnapshot dt : dataSnapshot.getChildren()) {
                     Order mSewa = dt.getValue(Order.class);
-                    if (mSewa.getStatus().equals("Pesanan Selesai")) {
-                        String [] date = mSewa.getDroptime().split(" ");
-                        String monthAndYear = date[1] + " "+ date[2];
-                        if (!listMonth.contains(monthAndYear)) {
-                            listMonth.add(monthAndYear);
-                        }
+                    if (mSewa.getStatus().equals("Pesanan Selesai") && mSewa.getDroptime().contains(getIntent().getStringExtra("monthYear"))) {
+                        listsewa.add(mSewa);
                     }
                 }
-                recyclerView.setAdapter(new AdapterMonth(listMonth, getContext()));
+                recyclerView.setAdapter(new AdapterOrder(listsewa, getApplicationContext(),false));
             }
 
             @Override
